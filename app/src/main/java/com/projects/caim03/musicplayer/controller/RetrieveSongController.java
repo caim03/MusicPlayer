@@ -50,6 +50,4 @@ public class RetrieveSongController {
             while (musicCursor.moveToNext());
         }
     }
-
-
 }

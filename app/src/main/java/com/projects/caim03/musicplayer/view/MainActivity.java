@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity
 
 
     private Boolean isFabOpen = false;
-    private FloatingActionButton playFab, prevFab, nextFab;
+    private FloatingActionButton playFab, prevFab, nextFab; //TODO: perché 3 fab? Non è meglio un oggetto stateful?
     private RecyclerView recyclerView;
     private Animation fabOpen, fabClose;
 
-
     private void animateFab() {
+
         if (isFabOpen) {
             prevFab.startAnimation(fabClose);
             nextFab.startAnimation(fabClose);
@@ -81,10 +81,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -98,11 +94,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        else super.onBackPressed();
     }
 
     @Override
