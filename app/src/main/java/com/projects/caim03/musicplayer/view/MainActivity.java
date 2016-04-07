@@ -1,5 +1,6 @@
 package com.projects.caim03.musicplayer.view;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         playFab = (FloatingActionButton) findViewById(R.id.play_fab);
         prevFab = (FloatingActionButton) findViewById(R.id.prev_fab);
