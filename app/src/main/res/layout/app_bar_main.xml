@@ -41,6 +41,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:pressedTranslationZ="12dp"
         app:elevation="6dp"
-        android:src="@drawable/ic_play_arrow_white_36dp" />
+        android:src="@drawable/ic_play_arrow_white_36dp"
+        android:visibility="invisible" />
 
 </android.support.design.widget.CoordinatorLayout>

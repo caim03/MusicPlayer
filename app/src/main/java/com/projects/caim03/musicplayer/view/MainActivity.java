@@ -1,52 +1,37 @@
 package com.projects.caim03.musicplayer.view;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.projects.caim03.musicplayer.R;
 import com.projects.caim03.musicplayer.controller.RetrieveSongController;
+import com.projects.caim03.musicplayer.model.ObservableSong;
+import com.projects.caim03.musicplayer.model.Song;
+
+import java.util.Observable;
+import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Observer {
 
-
-    private Boolean isFabOpen = false;
-    private FloatingActionButton playFab, prevFab, nextFab; //TODO: perché 3 fab? Non è meglio un oggetto stateful?
     private RecyclerView recyclerView;
-    private Animation fabOpen, fabClose;
+    private RecycleAdatper recycleAdatper;
+    private DrawerLayout drawer;
+    private android.support.v7.app.ActionBar actionBar;
+    private TextView title, artist;
 
-    private void animateFab() {
+    private ObservableSong observableSong;
 
-        if (isFabOpen) {
-            prevFab.startAnimation(fabClose);
-            nextFab.startAnimation(fabClose);
-            prevFab.setClickable(false);
-            nextFab.setClickable(true);
-            isFabOpen = false;
-        }
-
-        else {
-            prevFab.startAnimation(fabOpen);
-            nextFab.startAnimation(fabOpen);
-            prevFab.setClickable(true);
-            nextFab.setClickable(true);
-            isFabOpen = true;
-        }
-    }
 
 
     @Override
@@ -54,36 +39,30 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 
-        playFab = (FloatingActionButton) findViewById(R.id.play_fab);
-        prevFab = (FloatingActionButton) findViewById(R.id.prev_fab);
-        nextFab = (FloatingActionButton) findViewById(R.id.next_fab);
+        title = (TextView) findViewById(R.id.title_text2);
+        artist = (TextView) findViewById(R.id.author_text2);
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
-        fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-
-        // TODO play to pause animation and pause to play animation
-
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        RetrieveSongController songCtrl = new RetrieveSongController(this);
+        RetrieveSongController songCtrl = RetrieveSongController.getInstance();
+        songCtrl.setContext(this);
 
-        RecycleAdatper recycleAdatper = new RecycleAdatper(songCtrl.getList());
+        recycleAdatper = new RecycleAdatper(songCtrl.getList(), this);
         recyclerView.setAdapter(recycleAdatper);
 
-        playFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateFab();
-            }
-        });
+        observableSong = ObservableSong.getInstance();
+        observableSong.attach(this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -91,11 +70,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
         else super.onBackPressed();
@@ -118,6 +97,15 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (id == android.R.id.home) {
+            if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+            else {
+                drawer.closeDrawer(GravityCompat.START);
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -143,8 +131,14 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object data) {
+        Song song = observableSong.getState();
+        this.title.setText(song.getTitle());
+        this.artist.setText(song.getArtist());
     }
 }

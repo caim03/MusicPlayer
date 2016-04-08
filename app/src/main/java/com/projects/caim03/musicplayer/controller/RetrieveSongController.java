@@ -13,10 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RetrieveSongController {
+
     private Context context;
     private List<Song> list = new ArrayList<>();
+    private static RetrieveSongController instance = null;
 
-    public RetrieveSongController(Context context) {
+    // PATTERN SINGLETON
+    protected RetrieveSongController() {
+
+    }
+
+    public static RetrieveSongController getInstance() {
+        if (instance == null) {
+            instance = new RetrieveSongController();
+        }
+        return instance;
+    }
+
+    public void setContext(Context context) {
         this.context = context;
     }
 
@@ -39,12 +53,16 @@ public class RetrieveSongController {
                     (android.provider.MediaStore.Audio.Media.ARTIST);
             int extColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.MIME_TYPE);
+            int idColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media._ID);
             //add songs to list
             do {
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
+                String thisMime = musicCursor.getString(extColumn);
+                int thisId = musicCursor.getInt(idColumn);
                 if (musicCursor.getString(extColumn).equals("audio/mpeg")) {
-                    list.add(new Song(thisTitle, thisArtist, null));
+                    list.add(new Song(thisId, thisTitle, thisArtist, thisMime, null));
                 }
             }
             while (musicCursor.moveToNext());
