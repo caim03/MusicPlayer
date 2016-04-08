@@ -14,8 +14,10 @@ import com.projects.caim03.musicplayer.model.Song;
 
 import java.util.List;
 
+import es.claucookie.miniequalizerlibrary.EqualizerView;
 
-public class RecycleAdatper extends RecyclerView.Adapter<RecycleAdatper.SongViewHolder> {
+
+public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.SongViewHolder> {
     private Context context;
     private List<Song> list;
     private MusicController musicController;
@@ -38,14 +40,28 @@ public class RecycleAdatper extends RecyclerView.Adapter<RecycleAdatper.SongView
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    EqualizerView equalizer = (EqualizerView) v.findViewById(R.id.equalizer_view);
+
                     int pos = getAdapterPosition();
                     MusicController musicController = MusicController.getInstance();
-                    if (!musicController.isStarted()) musicController.start(pos);
+                    if (!musicController.isStarted()) {
+                        equalizer.setVisibility(View.VISIBLE);
+                        equalizer.animateBars(); // Whenever you want to tart the animation
+                        musicController.start(pos);
+                    }
 
                     else {
-                        if (pos == musicController.getPos()) musicController.pause();
+                        if (pos == musicController.getPos()) {
+                            musicController.pause();
+                            equalizer.stopBars(); // When you want equalizer stops animating
+                            equalizer.setVisibility(View.INVISIBLE);
+                        }
                         else {
                             musicController.pause();
+                            equalizer.stopBars(); // When you want equalizer stops animating
+                            equalizer.setVisibility(View.VISIBLE); // IMPOSTO IL NUOVO EQUALIZER
+                            // TODO COME TOLGO IL VECCHIO EQUALIZER?
                             musicController.start(pos);
                         }
                     }
@@ -54,7 +70,7 @@ public class RecycleAdatper extends RecyclerView.Adapter<RecycleAdatper.SongView
         }
     }
 
-    public RecycleAdatper(List<Song> songList, Context context) {
+    public RecycleAdapter(List<Song> songList, Context context) {
         this.list = songList;
         this.context = context;
         musicController = MusicController.getInstance();
@@ -62,7 +78,7 @@ public class RecycleAdatper extends RecyclerView.Adapter<RecycleAdatper.SongView
     }
 
     @Override
-    public RecycleAdatper.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecycleAdapter.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.card_view, parent, false);
@@ -71,7 +87,7 @@ public class RecycleAdatper extends RecyclerView.Adapter<RecycleAdatper.SongView
     }
 
     @Override
-    public void onBindViewHolder(RecycleAdatper.SongViewHolder holder, int position) {
+    public void onBindViewHolder(RecycleAdapter.SongViewHolder holder, int position) {
         Song song = list.get(position);
 
         String title = song.getTitle();

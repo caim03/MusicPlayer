@@ -12,12 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import com.projects.caim03.musicplayer.R;
 import com.projects.caim03.musicplayer.controller.RetrieveSongController;
 import com.projects.caim03.musicplayer.model.ObservableSong;
 import com.projects.caim03.musicplayer.model.Song;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,7 +23,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Observer {
 
     private RecyclerView recyclerView;
-    private RecycleAdatper recycleAdatper;
+    private RecycleAdapter recycleAdapter;
     private DrawerLayout drawer;
     private android.support.v7.app.ActionBar actionBar;
     private TextView title, artist;
@@ -56,8 +54,8 @@ public class MainActivity extends AppCompatActivity
         RetrieveSongController songCtrl = RetrieveSongController.getInstance();
         songCtrl.setContext(this);
 
-        recycleAdatper = new RecycleAdatper(songCtrl.getList(), this);
-        recyclerView.setAdapter(recycleAdatper);
+        recycleAdapter = new RecycleAdapter(songCtrl.getList(), this);
+        recyclerView.setAdapter(recycleAdapter);
 
         observableSong = ObservableSong.getInstance();
         observableSong.attach(this);
