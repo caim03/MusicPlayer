@@ -30,4 +30,6 @@ dependencies {
     compile 'com.wnafee:vector-compat:1.0.5'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.github.claucookie.miniequalizer:library:1.0.0'
+    compile 'com.github.fafaldo:fab-toolbar:1.2.0'
+    compile 'com.pkmmte.view:circularimageview:1.1'
 }

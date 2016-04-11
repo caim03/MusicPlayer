@@ -1,64 +1,73 @@
 package com.projects.caim03.musicplayer.view;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.projects.caim03.musicplayer.R;
-import com.projects.caim03.musicplayer.controller.RetrieveSongController;
-import com.projects.caim03.musicplayer.model.ObservableSong;
-import com.projects.caim03.musicplayer.model.Song;
-import java.util.Observable;
-import java.util.Observer;
+import com.projects.caim03.musicplayer.controller.TypeFaceService;
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Observer {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView recyclerView;
-    private RecycleAdapter recycleAdapter;
     private DrawerLayout drawer;
-    private android.support.v7.app.ActionBar actionBar;
+    private Toolbar actionBar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
+    private FloatingActionButton fab;
+    private FABToolbarLayout toolbar;
     private TextView title, artist;
-
-    private ObservableSong observableSong;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        actionBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(actionBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = (TextView) findViewById(R.id.title_text2);
-        artist = (TextView) findViewById(R.id.author_text2);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.addTab(tabLayout.newTab().setText("Songs"));
+        tabLayout.addTab(tabLayout.newTab().setText("Playlist"));
+        tabLayout.addTab(tabLayout.newTab().setText("Favourites"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        RetrieveSongController songCtrl = RetrieveSongController.getInstance();
-        songCtrl.setContext(this);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        recycleAdapter = new RecycleAdapter(songCtrl.getList(), this);
-        recyclerView.setAdapter(recycleAdapter);
+            }
 
-        observableSong = ObservableSong.getInstance();
-        observableSong.attach(this);
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -69,7 +78,27 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        toolbar = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
+        fab = (FloatingActionButton) findViewById(R.id.fabtoolbar_fab);
+        title = (TextView) findViewById(R.id.title_footer);
+        artist = (TextView) findViewById(R.id.artist_footer);
+
+        title.setTypeface(TypeFaceService.getRobotoMedium(this));
+        artist.setTypeface(TypeFaceService.getRobotoRegular(this));
+
+        Mediator.setFab(fab);
+        Mediator.setToolbar(toolbar);
+
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolbar.show();
+            }
+        });
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -94,6 +123,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_search) {
             return true;
         }
 
@@ -133,10 +166,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void update(Observable o, Object data) {
-        Song song = observableSong.getState();
-        this.title.setText(song.getTitle());
-        this.artist.setText(song.getArtist());
-    }
 }

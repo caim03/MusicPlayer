@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 import com.projects.caim03.musicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RetrieveSongController {
@@ -58,7 +60,11 @@ public class RetrieveSongController {
             //add songs to list
             do {
                 String thisTitle = musicCursor.getString(titleColumn);
+                if (thisTitle.contains("AUD-")) break;
+
                 String thisArtist = musicCursor.getString(artistColumn);
+                if ("<unknown>".equals(thisArtist)) thisArtist = "Unknown";
+
                 String thisMime = musicCursor.getString(extColumn);
                 int thisId = musicCursor.getInt(idColumn);
                 if (musicCursor.getString(extColumn).equals("audio/mpeg")) {
@@ -67,5 +73,11 @@ public class RetrieveSongController {
             }
             while (musicCursor.moveToNext());
         }
+        Collections.sort(list, new Comparator<Song>() {
+            @Override
+            public int compare(Song lhs, Song rhs) {
+                return lhs.getTitle().compareTo(rhs.getTitle());
+            }
+        });
     }
 }

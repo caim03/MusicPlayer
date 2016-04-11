@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Per il menù prendere 24dp le icons -->
+
     <item
         android:id="@+id/action_search"
         android:title="search"
-        android:icon="@drawable/ic_search_white_36dp"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom" />
 
     <item
