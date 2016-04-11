@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         artist.setTypeface(TypeFaceService.getRobotoRegular(this));
 
         Mediator.setFab(fab);
-        Mediator.setToolbar(toolbar);
+        Mediator.setToolbar(toolbar);  // TODO SLIDE BAR
 
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {

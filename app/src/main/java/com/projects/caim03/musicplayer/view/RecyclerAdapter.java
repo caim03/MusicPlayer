@@ -18,7 +18,8 @@ import java.util.List;
 
 import es.claucookie.miniequalizerlibrary.EqualizerView;
 
-
+// TODO DURATION IN CARD
+// TODO OBSERVER FOR TOOLBAR
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongViewHolder> {
     private Context context;
     private List<Song> list;
