@@ -8,6 +8,7 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 public class Mediator {
     private static FloatingActionButton fab;
     private static FABToolbarLayout toolbar;
+    private static RecyclerAdapter recyclerAdapter;
 
     public static FloatingActionButton getFab() {
         return fab;
@@ -15,6 +16,10 @@ public class Mediator {
 
     public static FABToolbarLayout getToolbar() {
         return toolbar;
+    }
+
+    public static RecyclerAdapter getRecyclerAdapter() {
+        return recyclerAdapter;
     }
 
     public static void setFab(FloatingActionButton button) {
@@ -25,4 +30,7 @@ public class Mediator {
         Mediator.toolbar = bar;
     }
 
+    public static void setRecyclerAdapter(RecyclerAdapter recyclerAdapter) {
+        Mediator.recyclerAdapter = recyclerAdapter;
+    }
 }

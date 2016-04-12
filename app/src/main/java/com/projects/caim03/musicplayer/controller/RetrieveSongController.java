@@ -17,7 +17,7 @@ import java.util.List;
 public class RetrieveSongController {
 
     private Context context;
-    private List<Song> list = new ArrayList<>();
+    private List<Song> list;
     private static RetrieveSongController instance = null;
 
     // PATTERN SINGLETON
@@ -43,6 +43,8 @@ public class RetrieveSongController {
 
     private void retrieveList() {
 
+        list = new ArrayList<>();
+
         ContentResolver musicResolver = context.getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
@@ -57,6 +59,10 @@ public class RetrieveSongController {
                     (MediaStore.Audio.Media.MIME_TYPE);
             int idColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media._ID);
+            int durColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.DURATION);
+            int albumColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.ALBUM_ID);
             //add songs to list
             do {
                 String thisTitle = musicCursor.getString(titleColumn);
@@ -67,8 +73,11 @@ public class RetrieveSongController {
 
                 String thisMime = musicCursor.getString(extColumn);
                 int thisId = musicCursor.getInt(idColumn);
+                String thisDuration = musicCursor.getString(durColumn);
+                long thisAlbum = musicCursor.getLong(albumColumn);
+
                 if (musicCursor.getString(extColumn).equals("audio/mpeg")) {
-                    list.add(new Song(thisId, thisTitle, thisArtist, thisMime, null));
+                    list.add(new Song(thisId, thisTitle, thisArtist, thisMime, thisAlbum, thisDuration));
                 }
             }
             while (musicCursor.moveToNext());

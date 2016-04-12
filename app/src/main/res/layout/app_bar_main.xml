@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="6dp"
                 app:fabSize="normal"
-                android:src="@drawable/abc_ic_menu_share_mtrl_alpha"/>
+                android:src="@drawable/ic_shuffle_white_24dp"/>
 
         </RelativeLayout>
 
@@ -98,7 +98,8 @@
                 android:layout_above="@+id/artist_footer"
                 android:layout_toEndOf="@+id/view"
                 android:textSize="16sp"
-                android:paddingLeft="8dp" />
+                android:paddingLeft="8dp"
+                android:singleLine="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,7 +110,8 @@
                 android:layout_toEndOf="@+id/view"
                 android:alpha="0.5"
                 android:textSize="12sp"
-                android:paddingLeft="8dp" />
+                android:paddingLeft="8dp"
+                android:singleLine="true" />
 
         </RelativeLayout>
 

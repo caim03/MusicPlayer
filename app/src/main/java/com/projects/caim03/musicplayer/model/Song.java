@@ -1,21 +1,21 @@
 package com.projects.caim03.musicplayer.model;
 
 
-import android.media.Image;
-
 public class Song {
     private int id;
     private String title;
     private String artist;
     private String mime;
-    private Image albumImage;
+    private long albumId;
+    private String duration;
 
-    public Song(int id, String title, String author, String mime,Image albumImage) {
+    public Song(int id, String title, String author, String mime, long albumImage, String duration) {
         this.id = id;
         this.title = title;
         this.artist = author;
         this.mime = mime;
-        this.albumImage = albumImage;
+        this.albumId = albumImage;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -34,8 +34,12 @@ public class Song {
         return mime;
     }
 
-    public Image getAlbumImage() {
-        return albumImage;
+    public long getAlbumImage() {
+        return albumId;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 
     public void setId(int id) {
@@ -52,7 +56,11 @@ public class Song {
 
     public void setMime(String mime) { this.mime = mime; }
 
-    public void setAlbumImage(Image albumImage) {
-        this.albumImage = albumImage;
+    public void setAlbumImage(long albumId) {
+        this.albumId = albumId;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

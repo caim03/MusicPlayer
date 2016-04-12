@@ -12,14 +12,13 @@ import com.pkmmte.view.CircularImageView;
 import com.projects.caim03.musicplayer.R;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
+import com.projects.caim03.musicplayer.model.ObservableSong;
 import com.projects.caim03.musicplayer.model.Song;
 
 import java.util.List;
 
 import es.claucookie.miniequalizerlibrary.EqualizerView;
 
-// TODO DURATION IN CARD
-// TODO OBSERVER FOR TOOLBAR
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongViewHolder> {
     private Context context;
     private List<Song> list;
@@ -30,18 +29,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
     }
 
     public static class SongViewHolder extends RecyclerView.ViewHolder{
-        private TextView titleText, authorText;
-        private EqualizerView equalizer;
+        private TextView titleText, authorText, durationText;
 
-        public SongViewHolder(View v) {
+        public SongViewHolder(View v, final List<Song> list) {
             super(v);
-
             titleText = (TextView) v.findViewById(R.id.title_text);
             authorText = (TextView) v.findViewById(R.id.author_text);
-            equalizer = (EqualizerView) v.findViewById(R.id.equalizer_view);
+            durationText = (TextView) v.findViewById(R.id.duration_text);
 
             titleText.setTypeface(TypeFaceService.getRobotoMedium(v.getContext()));
             authorText.setTypeface(TypeFaceService.getRobotoRegular(v.getContext()));
+            durationText.setTypeface(TypeFaceService.getRobotoRegular(v.getContext()));
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -49,31 +47,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
 
                     int pos = getAdapterPosition();
                     MusicController musicController = MusicController.getInstance();
+                    ObservableSong observableSong = ObservableSong.getInstance();
+                    observableSong.setState(list.get(pos));
 
                     if (!musicController.isStarted()) {
-                        musicController.setOldView(v);
-                        equalizer.animateBars();
-                        equalizer.setVisibility(View.VISIBLE);
                         musicController.start(pos);
                     }
 
                     else {
                         if (pos == musicController.getPos()) {
-                            equalizer.stopBars();
-                            equalizer.setVisibility(View.INVISIBLE);
                             musicController.pause();
                         }
                         else {
-                            View old = musicController.getOldViewV();
-                            EqualizerView oldEq = (EqualizerView) old.findViewById(R.id.equalizer_view);
-
-                            oldEq.stopBars();
-                            oldEq.setVisibility(View.INVISIBLE);
                             musicController.pause();
-
-                            musicController.setOldView(v);
-                            equalizer.animateBars();
-                            equalizer.setVisibility(View.VISIBLE);
                             musicController.start(pos);
                         }
                     }
@@ -95,7 +81,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
                 from(parent.getContext()).
                 inflate(R.layout.card_view, parent, false);
 
-        return new SongViewHolder(itemView);
+        return new SongViewHolder(itemView, list);
     }
 
     @Override
@@ -103,22 +89,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
         Song song = list.get(position);
 
         String title = song.getTitle();
-        System.out.println(title);
-        if (title == null) {
-            title = "Unknown";
-        }
-        holder.titleText.setText(title);
-
         String author = song.getArtist();
-        if (author == null) {
-            author = "Unknown";
-        }
-        holder.authorText.setText(author);
+        String duration = song.getDuration();
 
+        int seconds = (Integer.parseInt(duration) / 1000) % 60;
+        int minutes = (Integer.parseInt(duration) / (1000*60)) % 60;
+
+        String sec = String.valueOf(seconds);
+        if (seconds < 10) {
+            sec = "0" + sec;
+        }
+
+        holder.titleText.setText(title);
+        holder.authorText.setText(author);
+        holder.durationText.setText(String.valueOf(minutes) + ":" + sec);
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
+
+
 }

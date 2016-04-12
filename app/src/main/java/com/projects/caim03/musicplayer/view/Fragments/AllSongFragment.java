@@ -1,6 +1,7 @@
 package com.projects.caim03.musicplayer.view.Fragments;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,7 @@ public class AllSongFragment extends Fragment {
         songCtrl.setContext(view.getContext());
 
         recyclerAdapter = new RecyclerAdapter(songCtrl.getList(), view.getContext());
+        Mediator.setRecyclerAdapter(recyclerAdapter);
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {

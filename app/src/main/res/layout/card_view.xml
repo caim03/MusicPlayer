@@ -22,7 +22,8 @@
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:clickable="false"
-        android:paddingLeft="8dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/title_text"
@@ -30,11 +31,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="@color/colorText"
-            android:layout_marginLeft="16dp"
             android:textSize="16sp"
             android:text="Titolo"
-            android:layout_alignTop="@+id/equalizer_view"
-            android:layout_toEndOf="@+id/equalizer_view"
             android:singleLine="true"
             android:clickable="false" />
 
@@ -49,14 +47,18 @@
             android:layout_below="@+id/title_text"
             android:alpha="0.5" />
 
-        <es.claucookie.miniequalizerlibrary.EqualizerView
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/equalizer_view"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:visibility="invisible"
-            custom:foregroundColor="@color/colorAccent"
-            custom:animDuration="3500"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Duration"
+            android:id="@+id/duration_text"
+            android:textColor="@color/colorText"
+            android:textSize="12sp"
+            android:alpha="0.5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
 
     </RelativeLayout>
 
