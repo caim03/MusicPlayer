@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.projects.caim03.musicplayer.R;
+import com.projects.caim03.musicplayer.controller.FabController;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
 import com.projects.caim03.musicplayer.model.ObservableSong;
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private FABToolbarLayout toolbar;
     private TextView title, artist;
-
     private ObservableSong observableSong;
 
     @Override
@@ -101,16 +101,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Random random = new Random();
-                int pos = random.nextInt(Mediator.getRecyclerAdapter().getItemCount());
 
-                observableSong.setState(Mediator.getRecyclerAdapter().getList().get(pos));
-
-                MusicController musicController = MusicController.getInstance();
-
-                if (musicController.isStarted()) MusicController.getInstance().pause();
-                MusicController.getInstance().start(pos);
-                toolbar.show();
+                if (!Mediator.getFabState()) {
+                    FabController.startRandom(observableSong);
+                }
             }
         });
 

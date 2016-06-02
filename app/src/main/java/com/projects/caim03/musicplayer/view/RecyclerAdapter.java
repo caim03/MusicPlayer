@@ -2,6 +2,7 @@ package com.projects.caim03.musicplayer.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
                 @Override
                 public void onClick(View v) {
 
+                    Mediator.setFabState(true);
                     int pos = getAdapterPosition();
                     MusicController musicController = MusicController.getInstance();
                     ObservableSong observableSong = ObservableSong.getInstance();

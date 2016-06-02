@@ -9,6 +9,7 @@ public class Mediator {
     private static FloatingActionButton fab;
     private static FABToolbarLayout toolbar;
     private static RecyclerAdapter recyclerAdapter;
+    private static boolean fabState = false;
 
     public static FloatingActionButton getFab() {
         return fab;
@@ -22,6 +23,8 @@ public class Mediator {
         return recyclerAdapter;
     }
 
+    public static boolean getFabState() { return fabState; }
+
     public static void setFab(FloatingActionButton button) {
         Mediator.fab = button;
     }
@@ -32,5 +35,9 @@ public class Mediator {
 
     public static void setRecyclerAdapter(RecyclerAdapter recyclerAdapter) {
         Mediator.recyclerAdapter = recyclerAdapter;
+    }
+
+    public static void setFabState(boolean fabState) {
+        Mediator.fabState = fabState;
     }
 }

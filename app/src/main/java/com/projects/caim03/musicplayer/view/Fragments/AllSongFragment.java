@@ -58,6 +58,7 @@ public class AllSongFragment extends Fragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                Mediator.setFabState(false);
                 toolbar.hide();
             }
         });
