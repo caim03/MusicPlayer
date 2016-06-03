@@ -46,9 +46,14 @@ public class MusicController {
     }
 
     public void start(int pos) {
-        this.pos = pos;
+        setPos(pos);
         Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songList.get(pos).getId());
         mediaPlayer = MediaPlayer.create(context, uri);
+        mediaPlayer.start();
+    }
+
+    public void startSeek(int pos) {
+        setPos(pos);
         mediaPlayer.start();
     }
 
@@ -58,5 +63,13 @@ public class MusicController {
 
     public Boolean isStarted() {
         return mediaPlayer.isPlaying();
+    }
+
+    public int getSeek() {
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    public void setSeek(int seek) {
+        mediaPlayer.seekTo(seek);
     }
 }

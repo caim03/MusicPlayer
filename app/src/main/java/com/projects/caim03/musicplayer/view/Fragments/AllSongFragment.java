@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.projects.caim03.musicplayer.R;
+import com.projects.caim03.musicplayer.controller.MiniFabController;
 import com.projects.caim03.musicplayer.controller.RetrieveSongController;
 import com.projects.caim03.musicplayer.view.Mediator;
 import com.projects.caim03.musicplayer.view.RecyclerAdapter;
@@ -24,12 +26,15 @@ public class AllSongFragment extends Fragment {
     private FABToolbarLayout toolbar;
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
+    private MiniFabController miniFabController;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.all_song_frag, container, false);
+
+        miniFabController = MiniFabController.getInstance();
 
         fab = Mediator.getFab();
         toolbar = Mediator.getToolbar();
@@ -54,12 +59,18 @@ public class AllSongFragment extends Fragment {
         Mediator.setRecyclerAdapter(recyclerAdapter);
         recyclerView.setAdapter(recyclerAdapter);
 
+        Mediator.setList(recyclerAdapter.getList());
+
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Mediator.setFabState(false);
                 toolbar.hide();
+                if (miniFabController.getIsFabOpen()) {
+                    miniFabController.hideMiniFab();
+                    miniFabController.setIsFabOpen(false);
+                }
             }
         });
     }

@@ -13,18 +13,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
+import com.pkmmte.view.CircularImageView;
 import com.projects.caim03.musicplayer.R;
 import com.projects.caim03.musicplayer.controller.FabController;
+import com.projects.caim03.musicplayer.controller.MiniFabController;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
 import com.projects.caim03.musicplayer.model.ObservableSong;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,9 +39,17 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private PagerAdapter adapter;
     private FloatingActionButton fab;
+    private FloatingActionButton miniFabPrev;
+    private FloatingActionButton miniFabPlay;
+    private FloatingActionButton miniFabNext;
     private FABToolbarLayout toolbar;
     private TextView title, artist;
     private ObservableSong observableSong;
+    private Boolean isFabOpen = false;
+    private CircularImageView album;
+    private Animation fab_open, fab_close;
+    private int seek;
+    private MiniFabController miniFabController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +102,70 @@ public class MainActivity extends AppCompatActivity
         title = (TextView) findViewById(R.id.title_footer);
         artist = (TextView) findViewById(R.id.artist_footer);
 
+        miniFabPrev = (FloatingActionButton) findViewById(R.id.prevFab);
+        miniFabPlay = (FloatingActionButton) findViewById(R.id.playFab);
+        miniFabNext = (FloatingActionButton) findViewById(R.id.nextFab);
+        album = (CircularImageView) findViewById(R.id.view);
+
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+
+        miniFabController = MiniFabController.getInstance();
+        miniFabController.initialize(miniFabPrev, miniFabPlay, miniFabNext, fab_close, fab_open);
+
+        miniFabPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicController musicController = MusicController.getInstance();
+                int pos = musicController.getPos();
+                if (pos != 0) {
+                    pos = pos - 1;
+                    ObservableSong observableSong = ObservableSong.getInstance();
+                    observableSong.setState(Mediator.getList().get(pos));
+                    musicController.setPos(pos);
+                    if (musicController.isStarted()) {
+                        musicController.pause();
+                    }
+                    musicController.start(pos);
+                }
+            }
+        });
+
+        miniFabNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicController musicController = MusicController.getInstance();
+                int pos = musicController.getPos();
+                if (pos != Mediator.getList().size() - 1) {
+                    pos = pos + 1;
+                    ObservableSong observableSong = ObservableSong.getInstance();
+                    observableSong.setState(Mediator.getList().get(pos));
+                    musicController.setPos(pos);
+                    if (musicController.isStarted()) {
+                        musicController.pause();
+                    }
+                    musicController.start(pos);
+                }
+            }
+        });
+
+        miniFabPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicController musicController = MusicController.getInstance();
+                if (musicController.isStarted()) {
+                    seek = musicController.getSeek();
+                    musicController.pause();
+                    miniFabPlay.setImageResource(R.drawable.ic_play_arrow_white_36dp);
+                }
+                else {
+                    musicController.setSeek(seek);
+                    musicController.startSeek(musicController.getPos());
+                    miniFabPlay.setImageResource(R.drawable.ic_pause_white_36dp);
+                }
+            }
+        });
+
         title.setTypeface(TypeFaceService.getRobotoMedium(this));
         artist.setTypeface(TypeFaceService.getRobotoRegular(this));
 
@@ -104,6 +179,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (!Mediator.getFabState()) {
                     FabController.startRandom(observableSong);
+                    toolbar.show();
                 }
             }
         });
@@ -185,5 +261,10 @@ public class MainActivity extends AppCompatActivity
         title.setText(observableSong.getState().getTitle());
         artist.setText(observableSong.getState().getArtist());
         toolbar.show();
+        miniFabPlay.setImageResource(R.drawable.ic_pause_white_36dp);
+        if (!miniFabController.getIsFabOpen()) {
+            miniFabController.showMiniFab();
+            miniFabController.setIsFabOpen(true);
+        }
     }
 }

@@ -39,6 +39,44 @@
 
     <include layout="@layout/content_main" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/prevFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="230dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:src="@drawable/ic_skip_previous_white_36dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/playFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="160dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:src="@drawable/ic_pause_white_36dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/nextFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="90dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:src="@drawable/ic_skip_next_white_36dp" />
+
     <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
         android:id="@+id/fabtoolbar"
         android:layout_width="match_parent"
@@ -88,6 +126,7 @@
                 app:border_color="#EEEEEE"
                 app:border_width="4dp"
                 app:shadow="true"
+                android:clickable="true"
                 android:id="@+id/view" />
 
             <TextView

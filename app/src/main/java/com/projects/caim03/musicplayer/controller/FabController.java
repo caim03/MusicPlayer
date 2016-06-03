@@ -16,10 +16,10 @@ public class FabController {
         observableSong.setState(Mediator.getRecyclerAdapter().getList().get(pos));
 
         MusicController musicController = MusicController.getInstance();
+        musicController.setPos(pos);
 
         if (musicController.isStarted()) MusicController.getInstance().pause();
         MusicController.getInstance().start(pos);
-        Mediator.getToolbar().show();
     }
 
 }

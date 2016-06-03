@@ -54,15 +54,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
 
                     if (!musicController.isStarted()) {
                         musicController.start(pos);
+                        musicController.setPos(pos);
                     }
 
                     else {
                         if (pos == musicController.getPos()) {
-                            musicController.pause();
+
                         }
-                        else {
+                        else{
                             musicController.pause();
                             musicController.start(pos);
+                            musicController.setPos(pos);
                         }
                     }
                 }
