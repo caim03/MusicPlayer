@@ -1,6 +1,7 @@
 package com.projects.caim03.musicplayer.view;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
@@ -24,14 +26,16 @@ import com.projects.caim03.musicplayer.controller.FabController;
 import com.projects.caim03.musicplayer.controller.MiniFabController;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
+import com.projects.caim03.musicplayer.controller.UpdateSeekBar;
 import com.projects.caim03.musicplayer.model.ObservableSong;
 
+import java.sql.SQLOutput;
 import java.util.Observable;
 import java.util.Observer;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Observer {
+        implements NavigationView.OnNavigationItemSelectedListener, Observer, SeekBar.OnSeekBarChangeListener, Runnable {
 
     private DrawerLayout drawer;
     private Toolbar actionBar;
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     private Animation fab_open, fab_close;
     private int seek;
     private MiniFabController miniFabController;
+    private MusicController musicController;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity
         miniFabNext = (FloatingActionButton) findViewById(R.id.nextFab);
         album = (CircularImageView) findViewById(R.id.view);
 
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
+        Mediator.setSeekBar(seekBar);
+
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
 
@@ -127,6 +137,7 @@ public class MainActivity extends AppCompatActivity
                         musicController.pause();
                     }
                     musicController.start(pos);
+                    new Thread(new UpdateSeekBar(seekBar)).start();
                 }
             }
         });
@@ -145,6 +156,7 @@ public class MainActivity extends AppCompatActivity
                         musicController.pause();
                     }
                     musicController.start(pos);
+                    new Thread(new UpdateSeekBar(seekBar)).start();
                 }
             }
         });
@@ -180,12 +192,16 @@ public class MainActivity extends AppCompatActivity
                 if (!Mediator.getFabState()) {
                     FabController.startRandom(observableSong);
                     toolbar.show();
+                    new Thread(new UpdateSeekBar(seekBar)).start();
                 }
             }
         });
 
         observableSong = ObservableSong.getInstance();
         observableSong.attach(this);
+
+        musicController = MusicController.getInstance();
+
     }
 
 
@@ -265,6 +281,46 @@ public class MainActivity extends AppCompatActivity
         if (!miniFabController.getIsFabOpen()) {
             miniFabController.showMiniFab();
             miniFabController.setIsFabOpen(true);
+        }
+    }
+
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (musicController.isStarted()) {
+            if (fromUser) {
+                musicController.setSeek(progress);
+                seekBar.setProgress(progress);
+            }
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void run() {
+        int seek = 0;
+        int duration = musicController.getDuration();
+        seekBar.setProgress(100);
+        while (seek <= duration) {
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            seek = musicController.getSeek();
+            int progress = (seek / duration) * 100;
+            seekBar.setProgress(progress);
+            System.out.println("RUNNABLE");
         }
     }
 }

@@ -13,6 +13,7 @@ import com.pkmmte.view.CircularImageView;
 import com.projects.caim03.musicplayer.R;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
+import com.projects.caim03.musicplayer.controller.UpdateSeekBar;
 import com.projects.caim03.musicplayer.model.ObservableSong;
 import com.projects.caim03.musicplayer.model.Song;
 
@@ -55,6 +56,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.SongVi
                     if (!musicController.isStarted()) {
                         musicController.start(pos);
                         musicController.setPos(pos);
+                        new Thread(new UpdateSeekBar(Mediator.getSeekBar())).start();
                     }
 
                     else {

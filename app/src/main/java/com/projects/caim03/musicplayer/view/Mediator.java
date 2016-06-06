@@ -3,6 +3,7 @@ package com.projects.caim03.musicplayer.view;
 
 import android.support.design.widget.FloatingActionButton;
 import android.view.animation.Animation;
+import android.widget.SeekBar;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.projects.caim03.musicplayer.model.Song;
@@ -16,6 +17,7 @@ public class Mediator {
     private static RecyclerAdapter recyclerAdapter;
     private static boolean fabState = false;
     private static List<Song> list;
+    private static SeekBar seekBar;
 
     public static FloatingActionButton getFab() {
         return fab;
@@ -32,6 +34,8 @@ public class Mediator {
     public static boolean getFabState() { return fabState; }
 
     public static List<Song> getList() { return list; }
+
+    public static SeekBar getSeekBar() { return seekBar; }
 
     public static void setFab(FloatingActionButton button) {
         Mediator.fab = button;
@@ -50,5 +54,7 @@ public class Mediator {
     }
 
     public static void setList(List<Song> list) { Mediator.list = list; }
+
+    public static void setSeekBar(SeekBar seekBar) { Mediator.seekBar = seekBar; }
 
 }

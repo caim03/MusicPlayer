@@ -18,7 +18,6 @@ public class FabController {
         MusicController musicController = MusicController.getInstance();
         musicController.setPos(pos);
 
-        if (musicController.isStarted()) MusicController.getInstance().pause();
         MusicController.getInstance().start(pos);
     }
 

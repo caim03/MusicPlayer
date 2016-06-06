@@ -72,4 +72,8 @@ public class MusicController {
     public void setSeek(int seek) {
         mediaPlayer.seekTo(seek);
     }
+
+    public int getDuration() {
+        return mediaPlayer.getDuration();
+    }
 }

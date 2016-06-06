@@ -127,7 +127,8 @@
                 app:border_width="4dp"
                 app:shadow="true"
                 android:clickable="true"
-                android:id="@+id/view" />
+                android:id="@+id/view"
+                android:layout_marginTop="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -137,8 +138,8 @@
                 android:layout_above="@+id/artist_footer"
                 android:layout_toEndOf="@+id/view"
                 android:textSize="16sp"
-                android:paddingLeft="8dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:paddingLeft="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -149,8 +150,23 @@
                 android:layout_toEndOf="@+id/view"
                 android:alpha="0.5"
                 android:textSize="12sp"
-                android:paddingLeft="8dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:paddingLeft="10dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/artist_footer"
+                android:layout_toEndOf="@+id/view"
+                android:paddingRight="10dp">
+
+                <SeekBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seekBar" />
+            </LinearLayout>
 
         </RelativeLayout>
 
