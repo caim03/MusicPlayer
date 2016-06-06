@@ -1,7 +1,5 @@
 package com.projects.caim03.musicplayer.controller;
 
-
-import android.os.Handler;
 import android.widget.SeekBar;
 
 public class UpdateSeekBar implements Runnable {

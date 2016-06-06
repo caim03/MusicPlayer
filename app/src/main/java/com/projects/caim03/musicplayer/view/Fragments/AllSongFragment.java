@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.projects.caim03.musicplayer.R;
@@ -22,8 +23,6 @@ import com.projects.caim03.musicplayer.view.RecyclerAdapter;
 
 
 public class AllSongFragment extends Fragment {
-    private FloatingActionButton fab;
-    private FABToolbarLayout toolbar;
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private MiniFabController miniFabController;
@@ -35,9 +34,6 @@ public class AllSongFragment extends Fragment {
         View view = inflater.inflate(R.layout.all_song_frag, container, false);
 
         miniFabController = MiniFabController.getInstance();
-
-        fab = Mediator.getFab();
-        toolbar = Mediator.getToolbar();
         setupRecyclerView(view);
 
         return view;
@@ -66,7 +62,6 @@ public class AllSongFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Mediator.setFabState(false);
-                toolbar.hide();
                 if (miniFabController.getIsFabOpen()) {
                     miniFabController.hideMiniFab();
                     miniFabController.setIsFabOpen(false);

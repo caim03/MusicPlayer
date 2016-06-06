@@ -1,7 +1,6 @@
 package com.projects.caim03.musicplayer.view;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -16,20 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.pkmmte.view.CircularImageView;
 import com.projects.caim03.musicplayer.R;
-import com.projects.caim03.musicplayer.controller.FabController;
 import com.projects.caim03.musicplayer.controller.MiniFabController;
 import com.projects.caim03.musicplayer.controller.MusicController;
 import com.projects.caim03.musicplayer.controller.TypeFaceService;
 import com.projects.caim03.musicplayer.controller.UpdateSeekBar;
 import com.projects.caim03.musicplayer.model.ObservableSong;
 
-import java.sql.SQLOutput;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -46,10 +43,9 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton miniFabPrev;
     private FloatingActionButton miniFabPlay;
     private FloatingActionButton miniFabNext;
-    private FABToolbarLayout toolbar;
+    private RelativeLayout toolbar;
     private TextView title, artist;
     private ObservableSong observableSong;
-    private Boolean isFabOpen = false;
     private CircularImageView album;
     private Animation fab_open, fab_close;
     private int seek;
@@ -103,10 +99,24 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        toolbar = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
-        fab = (FloatingActionButton) findViewById(R.id.fabtoolbar_fab);
+        toolbar = (RelativeLayout) findViewById(R.id.fabtoolbar_toolbar);
         title = (TextView) findViewById(R.id.title_footer);
         artist = (TextView) findViewById(R.id.artist_footer);
+
+        toolbar.setClickable(true);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!miniFabController.getIsFabOpen()) {
+                    miniFabController.showMiniFab();
+                    miniFabController.setIsFabOpen(true);
+                }
+                else {
+                    miniFabController.hideMiniFab();
+                    miniFabController.setIsFabOpen(false);
+                }
+            }
+        });
 
         miniFabPrev = (FloatingActionButton) findViewById(R.id.prevFab);
         miniFabPlay = (FloatingActionButton) findViewById(R.id.playFab);
@@ -181,27 +191,10 @@ public class MainActivity extends AppCompatActivity
         title.setTypeface(TypeFaceService.getRobotoMedium(this));
         artist.setTypeface(TypeFaceService.getRobotoRegular(this));
 
-        Mediator.setFab(fab);
-        Mediator.setToolbar(toolbar);  // TODO SLIDE BAR
-
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!Mediator.getFabState()) {
-                    FabController.startRandom(observableSong);
-                    toolbar.show();
-                    new Thread(new UpdateSeekBar(seekBar)).start();
-                }
-            }
-        });
-
         observableSong = ObservableSong.getInstance();
         observableSong.attach(this);
 
         musicController = MusicController.getInstance();
-
     }
 
 
@@ -276,7 +269,7 @@ public class MainActivity extends AppCompatActivity
 
         title.setText(observableSong.getState().getTitle());
         artist.setText(observableSong.getState().getArtist());
-        toolbar.show();
+
         miniFabPlay.setImageResource(R.drawable.ic_pause_white_36dp);
         if (!miniFabController.getIsFabOpen()) {
             miniFabController.showMiniFab();
